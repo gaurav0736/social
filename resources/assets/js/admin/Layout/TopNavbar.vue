@@ -54,8 +54,8 @@
             <div class="divider"></div>
             <a class="dropdown-item" href="#">Separated link</a>
           </drop-down>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
+          <li class="nav-item" v-if="auth">
+            <a @click.stop="logout" class="nav-link">
               Log out
             </a>
           </li>
@@ -67,6 +67,9 @@
 
 </template>
 <script>
+  import Auth from '../../store/auth'
+  import Flash from '../../helpers/flash'
+  import { post, interceptors } from '../../helpers/api'
   export default {
     computed: {
       routeName () {
@@ -76,7 +79,19 @@
     },
     data () {
       return {
-        activeNotifications: false
+        activeNotifications: false,
+        authState: Auth.state,
+      }
+    },
+    computed: {
+      auth() {
+        if(this.authState.api_token) {
+          return true
+        }
+        return false
+      },
+      guest() {
+        return !this.auth
       }
     },
     methods: {
@@ -94,6 +109,17 @@
       },
       hideSidebar () {
         this.$sidebar.displaySidebar(false)
+      },
+      logout() {
+        post('/api/logout')
+            .then((res) => {
+                if(res.data.done) {
+                    // remove token
+                    Auth.remove()
+                    Flash.setSuccess('You have successfully logged out.')
+                    this.$router.push('/admin/login')
+            }
+        })
       }
     }
   }
