@@ -10,6 +10,13 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,300" rel=stylesheet type=text/css>
         <link href="{{ asset('css/nucleo-icons.css') }}" rel=stylesheet>
         <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
+        <script>
+        window.Laravel = {!! json_encode(['csrfToken' => csrf_token()]) !!};
+        @if(Auth::check())
+            window.Laravel.Auth = {!! json_encode( Auth::user() ) !!};
+            
+        @endif
+    </script>
     </head>
     <body>
         <div id="root"></div>

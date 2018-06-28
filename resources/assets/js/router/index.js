@@ -13,7 +13,6 @@ import OptionCreate from '../admin/OptionCreate.vue'
 
 
 
-
 Vue.use(VueRouter)
 Vue.use(VueSweetAlert)
 
@@ -61,7 +60,16 @@ const router = new VueRouter({
       },
       { path: 'home',
          name: 'home',
-        component: Home
+        component: Home,
+        beforeEnter: (to, from, next) => {
+                if( window.Laravel.hasOwnProperty('Auth') ) {
+                    next(true);
+                } else {
+                    next(false);
+                    alert('Please login to access Dashboard');
+                   //  this.$swal("Please login to upload a video!", (err.response.data.message), "error");
+                }
+            }
       },{ path: '*', component: NotFoundPage }
      
     ]

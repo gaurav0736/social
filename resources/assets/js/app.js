@@ -5,7 +5,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-//require('./bootstrap');
+require('./bootstrap');
 
 import Vue from 'vue'
 
@@ -14,14 +14,26 @@ import router from './router'
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
 
-Vue.use(LightBootstrap)
 
+
+// beforeEach route scroll to top
+router.beforeEach( (to, from, next) => {
+    window.scrollTo(0,0);
+    next(true);
+});
+
+
+Vue.use(LightBootstrap)
 
 const app = new Vue({
 	el: '#root',
 	template: `<app></app>`,
 	components: { App },
-	router
+	router,
+    data: {
+        auth: Laravel.Auth,
+        channel : Laravel.Channel
+    }
 })
 
 
