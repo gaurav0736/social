@@ -16,5 +16,18 @@ export default {
 		localStorage.removeItem('api_token')
 		localStorage.removeItem('user_id')
 		this.initialize()
-	}
+	},
+	 check() {
+        if (localStorage.getItem('api_token') !== null) {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('api_token')
+            axios.get('api/profile').then(response => {
+                this.user = response.data.data
+                this.loggedIn = true
+            }).catch(error => {
+                router.go({name: 'login'})
+            })
+        }
+    }
 }
+
+

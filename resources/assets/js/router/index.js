@@ -10,7 +10,7 @@ import NotFoundPage from '../admin/NotFoundPage.vue'
 import Home from '../admin/HomePage.vue'
 import Option from '../admin/OptionShow.vue'
 import OptionCreate from '../admin/OptionCreate.vue'
-
+import Auth from '../store/auth'
 
 
 Vue.use(VueRouter)
@@ -20,10 +20,7 @@ Vue.use(VueSweetAlert)
 const router = new VueRouter({
 	mode: 'history',
   linkActiveClass: 'nav-item active',
-	routes: [
-		/*{ path: adminUrl, component: Login },
-		{ path: adminUrl + '/register', component: Register },
-		{ path: '/admin/login', component: Login },*/
+	routes: [	
 		{
     path: '/',
     component: Dashboard,
@@ -55,29 +52,42 @@ const router = new VueRouter({
         component: OptionCreate,meta:{mode:'create'}
       },{
         path: 'option/:id/edit',
-         name: 'OptionEdit',
+        name: 'OptionEdit',
         component: OptionCreate,meta:{mode:'edit'}
       },
       { path: 'home',
          name: 'home',
         component: Home,
-        beforeEnter: (to, from, next) => {
-                if( window.Laravel.hasOwnProperty('Auth') ) {
-                    next(true);
-                } else {
-                    next(false);
-                    alert('Please login to access Dashboard');
-                   //  this.$swal("Please login to upload a video!", (err.response.data.message), "error");
-                }
-            }
+      
       },{ path: '*', component: NotFoundPage }
      
     ]
   } ,  { path: '*', component: NotFoundPage }
 
-	]
+	],scrollBehavior(to, from) {
+            return {x: 0, y: 0};
+        }
 
 })
+
+
+
+
+
+router.beforeEach((to, from, next) => {
+   if(to.name=='Login'){
+     next() 
+   }else{
+        if(!Auth.check()){
+            return;
+        }else{
+            next() 
+        }
+    }
+   
+})
+
+
 
 
 
