@@ -11902,7 +11902,7 @@ module.exports = Vue;
 
 		if (localStorage.getItem('api_token') !== null) {
 			axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('api_token');
-			axios.get('api/profile').then(function (response) {
+			axios.get('api/home').then(function (response) {
 				_this.user = response.data.data;
 				_this.loggedIn = true;
 			}).catch(function (error) {
@@ -41649,12 +41649,17 @@ var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
 });
 
 router.beforeEach(function (to, from, next) {
+  //alert(Auth.loggedIn);
   if (to.name == 'Login') {
+    // alert('1'); 
     next();
   } else {
-    if (!__WEBPACK_IMPORTED_MODULE_11__store_auth__["a" /* default */].check()) {
-      return;
+    if (__WEBPACK_IMPORTED_MODULE_11__store_auth__["a" /* default */].state.api_token == null) {
+      //  alert('2'); 
+      router.push('/admin/login');
+      // next()
     } else {
+      //    alert('3'); 
       next();
     }
   }

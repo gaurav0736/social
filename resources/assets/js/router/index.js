@@ -75,16 +75,21 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
+  //alert(Auth.loggedIn);
    if(to.name=='Login'){
+    // alert('1'); 
      next() 
+   }else {
+    if(Auth.state.api_token == null){
+   //  alert('2'); 
+      router.push('/admin/login')
+          // next()
    }else{
-        if(!Auth.check()){
-            return;
-        }else{
+      //    alert('3'); 
             next() 
-        }
-    }
-   
+       }
+    
+   }
 })
 
 
